@@ -1,15 +1,18 @@
 import pandas as pd
 from geopy.geocoders import GoogleV3
 from geopy.extra.rate_limiter import RateLimiter
+from donotcommit import ApiKey
 
-geolocator = GoogleV3(format_string="%s, Marbletown NY")
+api_key = ApiKey()
+
+geolocator = GoogleV3(format_string="%s, Marbletown NY", api_key=str(api_key.gmap))
 geocode = RateLimiter(geolocator.geocode, min_delay_seconds=1)
 
 # create new csv file to save data
-new_csv_file= open('geocoded_data.csv', 'w')
+new_csv_file= open('geocoded_data500.csv', 'w')
 
 # process original csv file
-df_csv = pd.read_csv('tmarble_export.csv', nrows=2)
+df_csv = pd.read_csv('tmarble_export.csv', header=0, skiprows=range(1, 400), nrows=100)
 for row in df_csv.itertuples(index=True, name='Pandas'):
     row_add_number= getattr(row, "ADDRESS_NU")
                                                 # isnan throws typeerror against row_add_number even though a float??
